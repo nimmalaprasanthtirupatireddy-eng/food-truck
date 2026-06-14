@@ -7,6 +7,7 @@ export function CartProvider({ children }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [successOrder, setSuccessOrder] = useState(null);
+  const [heatLevel, setHeatLevel] = useState("Medium");
 
   const addToCart = (item) => {
     const existing = cartItems.find((i) => i.id === item.id);
@@ -88,6 +89,9 @@ export function CartProvider({ children }) {
 
         successOrder,
         setSuccessOrder,
+
+        heatLevel,
+        setHeatLevel,
 
         addToCart,
         decreaseQuantity,

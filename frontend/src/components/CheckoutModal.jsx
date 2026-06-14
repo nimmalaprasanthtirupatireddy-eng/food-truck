@@ -10,6 +10,7 @@ export default function CheckoutModal() {
     setIsCheckoutOpen,
     setSuccessOrder,
     clearCart,
+    heatLevel,
   } = useCart();
 
   const [form, setForm] = useState({
@@ -43,6 +44,9 @@ export default function CheckoutModal() {
 
       const payload = {
         ...form,
+        notes: form.notes
+          ? `${form.notes} [Spice: ${heatLevel.toUpperCase()}]`
+          : `[Spice: ${heatLevel.toUpperCase()}]`,
         items: cartItems.map((item) => ({
           menu_item_id: item.id,
           quantity: item.quantity,
@@ -64,7 +68,7 @@ export default function CheckoutModal() {
 
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center px-4">
-      <div className="bg-white w-full max-w-xl border-4 border-black shadow-[8px_8px_0px_black] p-8">
+      <div className="bg-white w-full max-w-xl border-4 border-black shadow-[8px_8px_0px_black] p-8 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-4xl font-black">CHECKOUT</h2>
 

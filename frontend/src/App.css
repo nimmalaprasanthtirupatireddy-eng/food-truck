@@ -182,3 +182,126 @@
     border-right-color: var(--border);
   }
 }
+
+@keyframes brief-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-bounce-brief {
+  animation: brief-bounce 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* --- Heat Level Themes --- */
+
+/* Mild (Green/Eco theme) */
+.theme-mild button.bg-black {
+  background-color: #2e7d32 !important;
+  border-color: #1b5e20 !important;
+}
+.theme-mild .text-red-500 {
+  color: #2e7d32 !important;
+}
+.theme-mild button {
+  box-shadow: 4px 4px 0px #1b5e20 !important;
+}
+.theme-mild .shadow-\[8px_8px_0px_black\] {
+  box-shadow: 8px 8px 0px #1b5e20 !important;
+}
+
+/* Medium (Default Red theme - no modifications needed) */
+
+/* Hot (Orange theme) */
+.theme-hot button.bg-black {
+  background-color: #ef6c00 !important;
+  border-color: #e65100 !important;
+}
+.theme-hot .text-red-500 {
+  color: #e65100 !important;
+}
+.theme-hot button {
+  box-shadow: 4px 4px 0px #d84315 !important;
+}
+.theme-hot .shadow-\[8px_8px_0px_black\] {
+  box-shadow: 8px 8px 0px #d84315 !important;
+}
+
+/* El Fuego (Vibrating Fire Red theme) */
+.theme-elfuego {
+  animation: elfuego-glow 2s infinite alternate;
+}
+.theme-elfuego button.bg-black {
+  background-color: #c62828 !important;
+  border-color: #b71c1c !important;
+}
+.theme-elfuego .text-red-500 {
+  color: #b71c1c !important;
+}
+.theme-elfuego button {
+  box-shadow: 4px 4px 0px #ff3d00 !important;
+  animation: wiggle-brief 0.4s ease infinite alternate;
+}
+.theme-elfuego .shadow-\[8px_8px_0px_black\] {
+  box-shadow: 8px 8px 0px #ff3d00 !important;
+}
+
+@keyframes elfuego-glow {
+  from {
+    box-shadow: inset 0 0 10px rgba(239, 51, 73, 0.15);
+  }
+  to {
+    box-shadow: inset 0 0 35px rgba(239, 51, 73, 0.4);
+  }
+}
+
+@keyframes wiggle-brief {
+  0% { transform: rotate(-0.2deg); }
+  100% { transform: rotate(0.2deg); }
+}
+
+/* --- Retro Matrix Cheat Theme --- */
+.retro-matrix {
+  background-color: #000000 !important;
+  color: #00ff00 !important;
+  font-family: 'Courier New', Courier, monospace !important;
+}
+
+.retro-matrix h1,
+.retro-matrix h2,
+.retro-matrix h3,
+.retro-matrix h4,
+.retro-matrix p,
+.retro-matrix span,
+.retro-matrix label,
+.retro-matrix td,
+.retro-matrix th {
+  color: #00ff00 !important;
+  font-family: 'Courier New', Courier, monospace !important;
+}
+
+.retro-matrix .bg-white,
+.retro-matrix .bg-\[\#f7f3ee\],
+.retro-matrix select option {
+  background-color: #0d0d0d !important;
+  border-color: #00ff00 !important;
+}
+
+.retro-matrix button,
+.retro-matrix input,
+.retro-matrix select,
+.retro-matrix textarea {
+  background-color: #000000 !important;
+  color: #00ff00 !important;
+  border-color: #00ff00 !important;
+  font-family: 'Courier New', Courier, monospace !important;
+  box-shadow: 4px 4px 0px #00ff00 !important;
+}
+
+.retro-matrix button:hover {
+  background-color: #00ff00 !important;
+  color: #000000 !important;
+}

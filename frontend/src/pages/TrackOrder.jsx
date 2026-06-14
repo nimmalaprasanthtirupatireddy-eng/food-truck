@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 
@@ -18,6 +18,25 @@ export default function TrackOrder() {
       setOrder(null);
     }
   };
+
+  useEffect(() => {
+    if (!order) return;
+
+    if (order.status === "Completed" || order.status === "Cancelled") {
+      return;
+    }
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await api.get(`/orders/track/${order.order_code}`);
+        setOrder(res.data);
+      } catch (err) {
+        console.error("Polling order status error:", err);
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [order?.status, order?.order_code]);
 
   return (
     <div className="min-h-screen bg-[#f7f3ee] px-6 py-10">
@@ -42,28 +61,31 @@ export default function TrackOrder() {
         </form>
 
         {order && (
-          <div className="border-2 border-black p-5">
-            <p className="font-black">ORDER CODE</p>
-            <h2 className="text-3xl font-black mb-4">{order.order_code}</h2>
+          <>
+            <div className="border-2 border-black p-5 bg-white mb-6">
+              <p className="font-black">ORDER CODE</p>
+              <h2 className="text-3xl font-black mb-4">{order.order_code}</h2>
 
-            <p className="font-black">STATUS</p>
-            <h2 className="text-4xl font-black text-red-500 mb-4">
-              {order.status}
-            </h2>
+              <p className="font-black">STATUS</p>
+              <h2 className="text-4xl font-black text-red-500 mb-4">
+                {order.status}
+              </h2>
 
-            <p className="font-black">TOTAL</p>
-            <p className="text-2xl font-black mb-4">₹{order.total_amount}</p>
+              <p className="font-black">TOTAL</p>
+              <p className="text-2xl font-black mb-4">₹{order.total_amount}</p>
 
-            <p className="font-black mb-2">ITEMS</p>
-            {order.items.map((item, index) => (
-              <div key={index} className="flex justify-between border-b py-2">
-                <span>
-                  {item.name} × {item.quantity}
-                </span>
-                <span>₹{item.price * item.quantity}</span>
-              </div>
-            ))}
-          </div>
+              <p className="font-black mb-2">ITEMS</p>
+              {order.items.map((item, index) => (
+                <div key={index} className="flex justify-between border-b py-2">
+                  <span>
+                    {item.name} × {item.quantity}
+                  </span>
+                  <span>₹{item.price * item.quantity}</span>
+                </div>
+              ))}
+            </div>
+
+          </>
         )}
       </div>
     </div>

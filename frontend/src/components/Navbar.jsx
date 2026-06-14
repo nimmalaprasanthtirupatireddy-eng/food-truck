@@ -1,9 +1,18 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const { cartCount, setIsCartOpen } = useCart();
+  const { cartCount, setIsCartOpen, heatLevel, setHeatLevel } = useCart();
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    if (cartCount === 0) return;
+    setIsAnimating(true);
+    const timer = setTimeout(() => setIsAnimating(false), 300);
+    return () => clearTimeout(timer);
+  }, [cartCount]);
 
   return (
     <nav className="bg-[#f7f3ee] border-b border-black sticky top-0 z-50">
@@ -13,20 +22,17 @@ export default function Navbar() {
           <h1 className="text-2xl md:text-3xl font-black">EL FUEGO TRUCK</h1>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-3 items-center">
           <button
             onClick={() => setIsCartOpen(true)}
-            className="bg-black text-white px-6 md:px-8 py-3 border border-black shadow-[4px_4px_0px_#ef3349] font-bold"
+            className={`bg-black text-white px-6 md:px-8 py-3 border border-black shadow-[4px_4px_0px_#ef3349] font-bold transition-transform ${
+              isAnimating ? "animate-bounce-brief" : ""
+            }`}
           >
             CART ({cartCount})
           </button>
 
-          <button
-            onClick={() => navigate("/admin/login")}
-            className="bg-white px-6 md:px-8 py-3 border border-black font-bold"
-          >
-            STAFF
-          </button>
+
           <button
             onClick={() => navigate("/track")}
             className="bg-white px-6 md:px-8 py-3 border border-black font-bold"

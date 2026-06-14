@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 
-export default function AdminDashboard() {
+export default function AdminDashboard({ onLogout }) {
   const navigate = useNavigate();
 
   const [stats, setStats] = useState(null);
@@ -125,7 +125,11 @@ export default function AdminDashboard() {
   const logout = () => {
     localStorage.removeItem("adminToken");
     localStorage.removeItem("adminEmail");
-    navigate("/");
+    if (onLogout) {
+      onLogout();
+    } else {
+      navigate("/");
+    }
   };
 
   return (
@@ -294,7 +298,7 @@ export default function AdminDashboard() {
                         <img
                           src={
                             item.image_url?.startsWith("/uploads")
-                              ? `http://127.0.0.1:8000${item.image_url}`
+                              ? `${api.defaults.baseURL}${item.image_url}`
                               : item.image_url
                           }
                           className="w-16 h-16 object-cover border border-black"
@@ -402,7 +406,7 @@ function MenuItemModal({
   uploadImage,
 }) {
   const imagePreview = item.image_url?.startsWith("/uploads")
-    ? `http://127.0.0.1:8000${item.image_url}`
+    ? `${api.defaults.baseURL}${item.image_url}`
     : item.image_url;
 
   return (
@@ -510,7 +514,7 @@ function MenuItemModal({
 function OrderDetailsModal({ order, onClose }) {
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center px-4">
-      <div className="bg-white w-full max-w-lg border-4 border-black shadow-[8px_8px_0px_#ef3349] p-8">
+      <div className="bg-white w-full max-w-lg border-4 border-black shadow-[8px_8px_0px_#ef3349] p-8 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-4xl font-black">ORDER DETAILS</h2>
 

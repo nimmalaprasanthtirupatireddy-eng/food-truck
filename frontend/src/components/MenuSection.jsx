@@ -24,7 +24,7 @@ export default function MenuSection() {
 
   const getImageUrl = (imageUrl) => {
     if (imageUrl?.startsWith("/uploads")) {
-      return `http://127.0.0.1:8000${imageUrl}`;
+      return `${api.defaults.baseURL}${imageUrl}`;
     }
     return imageUrl;
   };

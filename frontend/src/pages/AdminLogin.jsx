@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 
-export default function AdminLogin() {
+export default function AdminLogin({ onLogin }) {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -19,7 +19,11 @@ export default function AdminLogin() {
       localStorage.setItem("adminToken", res.data.access_token);
       localStorage.setItem("adminEmail", res.data.admin.email);
 
-      navigate("/admin");
+      if (onLogin) {
+        onLogin();
+      } else {
+        navigate("/admin");
+      }
     } catch (error) {
       alert("Invalid login");
       console.error(error);

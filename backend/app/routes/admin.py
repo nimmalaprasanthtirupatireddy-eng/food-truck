@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from datetime import datetime, date
+from datetime import date
 
 from app.database import get_db
 from app.models import Admin, MenuItem, Order, OrderItem
 from app.schemas import LoginRequest
-from app.auth import verify_password, create_token
+from app.auth import verify_password, create_token, verify_admin_token
+from app.auth import verify_admin_token
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
 
@@ -32,7 +33,10 @@ def admin_login(payload: LoginRequest, db: Session = Depends(get_db)):
 
 
 @router.get("/stats")
-def dashboard_stats(db: Session = Depends(get_db)):
+def dashboard_stats(
+    auth=Depends(verify_admin_token),
+    db: Session = Depends(get_db)
+):
     orders = db.query(Order).all()
 
     total_orders = len(orders)
@@ -43,7 +47,6 @@ def dashboard_stats(db: Session = Depends(get_db)):
     cancelled = db.query(Order).filter(Order.status == "Cancelled").count()
 
     menu_items = db.query(MenuItem).count()
-
     revenue = sum(order.total_amount or 0 for order in orders)
 
     today = date.today()
@@ -54,11 +57,7 @@ def dashboard_stats(db: Session = Depends(get_db)):
     ]
 
     today_orders = len(today_orders_list)
-
-    today_revenue = sum(
-        order.total_amount or 0
-        for order in today_orders_list
-    )
+    today_revenue = sum(order.total_amount or 0 for order in today_orders_list)
 
     order_items = db.query(OrderItem).all()
 
@@ -73,10 +72,7 @@ def dashboard_stats(db: Session = Depends(get_db)):
     top_selling_item = "No sales yet"
 
     if item_sales:
-        top_selling_item = max(
-            item_sales,
-            key=item_sales.get
-        )
+        top_selling_item = max(item_sales, key=item_sales.get)
 
     return {
         "total_orders": total_orders,
@@ -90,4 +86,12 @@ def dashboard_stats(db: Session = Depends(get_db)):
         "today_orders": today_orders,
         "today_revenue": today_revenue,
         "top_selling_item": top_selling_item,
+    }
+
+@router.get("/test-auth")
+def test_auth(
+    auth=Depends(verify_admin_token)
+):
+    return {
+        "message": "Token valid"
     }
