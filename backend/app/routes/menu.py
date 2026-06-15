@@ -8,6 +8,7 @@ import uuid
 from app.database import get_db
 from app.models import MenuItem
 from app.schemas import MenuItemCreate, MenuItemUpdate, MenuItemResponse
+from app.auth import verify_admin_token
 
 router = APIRouter(prefix="/menu", tags=["Menu"])
 
@@ -29,7 +30,7 @@ def get_menu_by_category(category: str, db: Session = Depends(get_db)):
     return db.query(MenuItem).filter(MenuItem.category == category).all()
 
 
-@router.post("/", response_model=MenuItemResponse)
+@router.post("/", response_model=MenuItemResponse, dependencies=[Depends(verify_admin_token)])
 def create_menu_item(item: MenuItemCreate, db: Session = Depends(get_db)):
     new_item = MenuItem(**item.model_dump())
     db.add(new_item)
@@ -38,7 +39,7 @@ def create_menu_item(item: MenuItemCreate, db: Session = Depends(get_db)):
     return new_item
 
 
-@router.put("/{item_id}", response_model=MenuItemResponse)
+@router.put("/{item_id}", response_model=MenuItemResponse, dependencies=[Depends(verify_admin_token)])
 def update_menu_item(
     item_id: int,
     item: MenuItemUpdate,
@@ -59,7 +60,7 @@ def update_menu_item(
     return menu_item
 
 
-@router.delete("/{item_id}")
+@router.delete("/{item_id}", dependencies=[Depends(verify_admin_token)])
 def delete_menu_item(item_id: int, db: Session = Depends(get_db)):
     menu_item = db.query(MenuItem).filter(MenuItem.id == item_id).first()
 
@@ -72,7 +73,7 @@ def delete_menu_item(item_id: int, db: Session = Depends(get_db)):
     return {"message": "Menu item deleted successfully"}
 
 
-@router.patch("/{item_id}/availability", response_model=MenuItemResponse)
+@router.patch("/{item_id}/availability", response_model=MenuItemResponse, dependencies=[Depends(verify_admin_token)])
 def toggle_availability(item_id: int, db: Session = Depends(get_db)):
     menu_item = db.query(MenuItem).filter(MenuItem.id == item_id).first()
 
@@ -86,7 +87,7 @@ def toggle_availability(item_id: int, db: Session = Depends(get_db)):
     return menu_item
 
 
-@router.patch("/{item_id}/featured", response_model=MenuItemResponse)
+@router.patch("/{item_id}/featured", response_model=MenuItemResponse, dependencies=[Depends(verify_admin_token)])
 def toggle_featured(item_id: int, db: Session = Depends(get_db)):
     menu_item = db.query(MenuItem).filter(MenuItem.id == item_id).first()
 
@@ -101,7 +102,7 @@ def toggle_featured(item_id: int, db: Session = Depends(get_db)):
     return menu_item
 
 
-@router.post("/upload-image")
+@router.post("/upload-image", dependencies=[Depends(verify_admin_token)])
 def upload_image(file: UploadFile = File(...)):
     os.makedirs(UPLOAD_DIR, exist_ok=True)
 

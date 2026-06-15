@@ -23,7 +23,7 @@ def admin_login(payload: LoginRequest, db: Session = Depends(get_db)):
 
     return {
         "message": "Login successful",
-        "access_token": create_token(),
+        "access_token": create_token(admin.email),
         "token_type": "bearer",
         "admin": {
             "id": admin.id,
